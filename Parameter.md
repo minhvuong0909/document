@@ -57,3 +57,41 @@ internal class Program
 - Sử dụng out, hàm có thể trả về nhiều value qua tham số
 - Ngạc nhiên chưa: hàm void cũng return đc value, qua out, và nhiều out
 - Hàm trả về nhiều value: khi tiện ta đang for trên tập data, dùng 1 lượt for làm nhiều việc luôn!!!
+
+_có 3 cách sài out_
+
+```javascript
+public static void PowerByTwo(out int x)
+{
+    int a = 10;
+    int b = a;
+    x = 100; // bên ngoài đổi theo đó em
+    //int c;
+}
+
+ static void Main(string[] args)
+ {
+     // cách sài out kiểu 1
+     //int n = 10;
+     //Console.WriteLine("Before calling method, n = " + n);
+     //PowerByTwo(out n);
+     //Console.WriteLine("after calling method, x now is " + n);
+
+     // cach sài out kiểu 2
+     int n;
+     PowerByTwo(out n); // biến đưa vào hàm out ko gán value
+     // vì đằng nào hàm cũng out ra !!!
+     Console.WriteLine("after calling method, x now is " + n);
+
+     // cach sài out kiểu 3
+     //PowerByTwo(out int n); // kĩ thuật khai báo inline
+     // inline: khai báo biến ngay trong lời gọi hàm, ngay lúc đưa tham số
+     //Console.WriteLine("after calling method, x now is " + n);
+ }
+
+```
+
+- _Từ khóa ref_: cũng là nguyên lý truyền tham chiếu: trong hàm thay đổi, bên ngoài đổi theo nhưng mạnh như out, có thể trong hàm ko chỉnh sửa value đưa vào, ko cam kết có value mới đc kết quả !!!
+- Thực chiến nếu hàm muốn hàm trả về nhiều giá trị -> ta nên là sự lựa chọn **out** hàng đầu!!!
+  **ref**: !!!
+- _Từ khóa in_: tham số đầu vào trở thành readonly, nghĩa là cầm thay đổi giá trị của biến đầu vào trong hàm, xài thì cứ xài, dùng value cứ dùng, cấm đổi value!!!
