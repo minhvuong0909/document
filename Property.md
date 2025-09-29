@@ -9,10 +9,15 @@
 
 ## II. MỖi biến bất kì đã bao hàm khái niệm GET và SET
 
+- **Class**: là cái khuôn, template, biểu mẫu (form), blue-print chờ đổ info vào để clone ra 1 sản phẩm, 1 object.
+- **Constructor**: hàm khởi tạo, phễu đổ vật liệu vào khuôn, có nhiều cách fill into vào khuôn, có nhiều constructor. => **để đúc ra 1 Object**
+- **Phím nóng tạo constructor**:
+  - `ctor tab tab`: tạo constructor default.
+  - `ctrl .`: tạo constructor có members.
 - Xét khai báo:
 
 ```java
-int yob = 2005;
+int yob = 2005; // hay còn gọi là backing field
 - Tên biến chính là value, chính là Get rồi
 sout(yob) -> màn hình in 2005; get giá trị ròi mới in đc cw(yob);
 - Ta viết hàm Get:
@@ -70,7 +75,7 @@ public void SetYob (int value) {
             Console.WriteLine(stu);
         }
 
-- named-argument: tham số đưa vào có đính kèm tên tham số
+- named-argument | terms | terminology: tham số đưa vào có đính kèm tên tham số
         public static void CreateObjectV4()
         {
             var stu = new Student(gpa: 8.6,yob: "2005",name: "vuong",id: "SE1"); // cho phép truyền lộn xộn thứ tự tham số miễn là ghi tên tham số kèm dấu: phía trước giá trị đưa vào!!
@@ -95,3 +100,113 @@ public void SetYob (int value) {
             Console.WriteLine($"|{an.Id}|{an.Name}|{an.Gpa}|{an.Yob}|");
         }
 ```
+
+---
+
+**Property trong C# là kĩ thuật viết GET SET kiểu mới, thông qua biến public bao luôn sau đó, trong nó 2 hàm GET SET;**
+
+- Xài Get Set kiểu mới y chang xài biến, tên biến - tên property là GET
+  tên biến - tên property = ??? là set
+- Giúp việc xài Get Set tự nhiên hơn kì nhiều, thay vì .GetYob() nay chỉ còn .Yob và thay vì .SetYob(2005) nay chỉ còn .Yob = 2005
+- Tuy nhiên phía sau vẩn cần Field _yob _... mang ý nghĩa backing field thằng chống lưng lưu info cho hàm Get Set
+
+---
+
+### Có 2 loại cú pháp PROPERTY !!!
+
+[1] **Full Property - dùng phím nóng `Propfull tab tab`**
+
+- Prop dạng này đầy đủ cú pháp, gồm cả backing field và tên hàm Get Set Full Code
+- Cú pháp này dùng khi mình muốn If Else trong các hàm Get Set check Validation khi gọi Get Set !!!
+
+[2] **Auto Implemented Property - Auto Property - Phím nóng `prop tab tab`**
+
+- Sử dụng này thì nó sẽ tư sinh backing field ẩn danh khi BUILD AND RUN
+- Kĩ thuật viết prop kiểu ngắn gọn, tự sinh ngầm _\_ten-bien_ đc gọi là **auto implemented property**
+
+---
+
+# Kĩ thuật Nullable
+
+- **null** trong database nghĩa là giá trị của cell - ô chưa xác định đc, chưa biết nó sẽ là gì đó trong tương lai | trạng thái chưa xác định rõ, ko là value đong đếm so sánh đc.
+
+- **Giải pháp cho phép null:**
+
+  - dấu _?_ mang ý nghĩa là bạn đc quyền gán giá trị là null.
+  - Nếu 1 cột trong database là null, khi đọc vào biến tương ứng trong class, thì biến này cũng phải mang ý nghĩa null.
+  - **Primitive data type - kiểu dữ liệu nguyên thủy** ko phép null, bắt buộc phải có giá trị gì đó và nếu bổ sung thêm dấu `?` ngay sau data type để cho phép biến primitive mang null !!!!
+
+  ```java
+  int? value;
+    -Trường hợp value là field của class → mặc định nó sẽ là null.
+
+    -Trường hợp value là biến cục bộ (local variable) trong hàm → bạn chưa khởi tạo nên sẽ báo lỗi compile:
+        "Use of unassigned local variable 'value'."
+
+
+    => fix lại:
+     int? value = null;
+     -Sẽ chạy đc và không hiển thị gì.
+  ```
+
+**Áp dụng trong method**
+
+```java
+-- ĐỐI VỚI PRIMITIVE
+public static void PlayPrimitiveNullable()
+{
+    // int long float double bool char short byte
+    int? yob; // những biến đc gán giá trị mặc định, những biến primitive nếu nó là backing field thì sẽ mang default nếu ko đc gán giá trị khi new object
+
+
+    // biến local tức là khai báo trong method thì chưa gán giá trị, ko cho xài
+    yob = null;
+    Console.WriteLine(yob);
+}
+
+public static void PlayObjectNullable()
+{
+    Student? an = new Student() { Id = 123, Name = "Vương" };
+    Console.WriteLine(an.ToString());
+
+    an = null;
+    Console.WriteLine(an.ToString());
+
+    // biến primitive - value-type ko đc mang null, ráng gõ, lỗi cú pháp
+
+    // biến primitive, value-type mún mang null thì phải là nullable ?
+    // vẫn xài bình thường khi in, ko bị exception
+
+    // biến object đc quyền gán = null mà ko cần ?
+    // sẵn có null mà ko cần ?, có ? vào cũng đc, ko cũng ko sao !!!
+    // nhưng nếu ráng xài hàm của biến object đang null => exception liền ngay và luôn !!!
+    // NULL REFERENCE EXCEPTION !!!!!!!!!!!!!!!!!!
+    // if (bien != null) đc quyền dùng nullable và biến object
+
+}
+
+
+public static void PlayObjectNullableV2()
+{
+    Student? an = new Student() { Id = 123, Name = "Vương" };
+    Console.WriteLine(an.ToString());
+    //an = null;
+
+    Student? anClone = an; //2 chàng trỏ 1 nang
+    //Console.WriteLine("an 2: " + anClone.ToString());
+    anClone.Gpa = 8.8;
+    //Console.WriteLine("an: " + an.ToString());
+    an = null;
+    Console.WriteLine("an: " + an.ToString());
+
+    Console.WriteLine(anClone.ToString()); //null exception chắc luống. vì đây ram ko có object
+
+    //nếu vùng ram ko có ai trỏ, ko có biến giữ lại, vùng ram mồ côi, con diều dứt dật, bộ gom rác - garabage collection định kì theo phần trăm giây sẽ clear vùng object để dành cho lệnh new khác. new tốn ram, con trỏ null là giải phóng vùng ram new
+    //mặc định object dc xài null mà ko cần ?. có cx đc
+    //2 biến obj = nhau, nghĩa là trỏ chung vùng ram
+    //biến trong hàm mà chấm gọi hàm, bên ngoài đổi theo do cả 2 cùng trỏ 1 vùng new
+
+}
+```
+
+- Lamda, Deligate
