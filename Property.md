@@ -210,3 +210,99 @@ public static void PlayObjectNullableV2()
 ```
 
 - Lamda, Deligate
+
+# Collection trong C#
+
+- List bên C# giống 100% sài ArrayList bên JAVA
+- ArrayList C# khác bên ArrayList Java
+
+### ArrayList trong C# thì không có generic để xác định nên nó sẽ lưu đủ loại.
+
+**=> KHÔNG NÊN SÀI ARRAYLIST TRONG C#, MÀ XÀI LIST TRONG C# NÓ TƯƠNG ĐƯƠNG 100% VỚI ARRAYLIST**
+
+```javascript
+public static void PlayWithArrayList()
+{
+    ArrayList bag = new ArrayList(); // ko có kí hiệu <> - generic, nghĩa là object này chỉ chấp nhận làm việc với ???
+                                     // còn nếu không có nghĩa là với đủ loại
+    bag.Add(1);             // wrapper thành Object
+    bag.Add("Ngọc Trinh");  // wrapper thành Object
+    bag.Add(3.14);
+    bag.Add('Z');
+    bag.Add(new Student() { Id = "SE1", Name = "Vương"});
+
+    Console.WriteLine("Number of elements: " + bag.Count);
+    // trong vùng new ArrayList chứa 6 con trỏ trỏ vào 6 vùng bên ngoài
+    // in kb
+    Console.WriteLine("The list of students");
+    for (int i = 0; i < bag.Count; i++)
+    {
+        //Console.WriteLine(bag[i]); // toang vì không chắc trogn túi đều có là Student để chấm đúng
+
+        Console.WriteLine(bag[i]); // gọi ToString() của mọi object lộn xộn
+        // gọi đích danh 1 Get() nào đó thua vì ko chắc mọi thứ trong bag đều có Get()
+    }
+    // lấy ra phần tử thứ i và in ra
+
+
+}
+```
+
+### List
+
+```javascript
+    public static void PLayWithList()
+{
+    // Bên java là: List<Student> bag = new ArrayList();
+    //              ArrayList<Student> bag = new ArrayList();
+    //              2 lệnh này Java tương đương 1 lệnh bên C#
+    //              List<Student> bag = new List();
+    //        List bên C# đc quyền new
+    List<Student> bag = new List<Student>();
+    //List<Student> list = new ();
+
+
+    // cú pháp obsolete - cú pháp cũ - nên bỏ hẳn khỏi code
+    //bag.Add(1);             // wrapper thành Object
+    //bag.Add("Ngọc Trinh");  // wrapper thành Object
+    //bag.Add(3.14);
+    //bag.Add('Z');
+    //  list nó chỉ nhận Student thôi
+    bag.Add(new Student() { Id = "SE1", Name = "Vương" });
+    bag.Add(new Student() { Id = "SE2", Name = "Quốc" });
+    Student an = new Student() { Id = "SE3" , Name = "AN" };
+    Console.WriteLine("Number of elements: " + bag.Count);
+    Console.WriteLine("Before removing");
+    for (int i = 0; i < bag.Count; i++)
+    {
+        Console.WriteLine(bag[i]);
+    }
+    bag.Remove(an); // nó sẽ không xóa khỏi vẫn sẽ còn đc lưu trong RAM
+    Console.WriteLine("After removing");
+    for (int i = 0; i < bag.Count; i++)
+    {
+        Console.WriteLine(bag[i]);
+    }
+    Console.WriteLine("An đã xóa chưa: " + an);
+    Student vuong = bag.ElementAt(0); // 2 chàng trỏ 1 nàng cùng lưu địa chỉ
+
+}
+
+
+public static void PlayWithListV2 ()
+{
+    List<Student> bag = new List<Student>();
+    bag.Add(new Student() { Id = "SE1", Name = "Vương" });
+    bag.Add(new Student() { Id = "SE2", Name = "Quốc" });
+    Student an = new Student() { Id = "SE3", Name = "AN" };
+
+    // Name: Vương chưa có biến con trỏ thì lôi thàng Vương ra
+    Student vuong = bag.ElementAt(0); // 2 biến, 1 vuong, 1 inner bag cùng trỏ new
+    vuong.Name = "Ngọc Trinh";
+    // in ra
+    for (int i = 0; i < bag.Count; i++)
+    {
+        Console.WriteLine(bag[i]);
+    }
+}
+```
