@@ -220,6 +220,10 @@ public static void PlayObjectNullableV2()
 
 **=> KHÔNG NÊN SÀI ARRAYLIST TRONG C#, MÀ XÀI LIST TRONG C# NÓ TƯƠNG ĐƯƠNG 100% VỚI ARRAYLIST**
 
+- Thiết kế chơi với đa dạng lúc runtime chỉ chơi với 1 => **GENERIC**
+- Unit of work => GENERIC
+- Design pattern, kĩ thuật thiết kế class khi CRUD table !!!
+
 ```javascript
 public static void PlayWithArrayList()
 {
@@ -306,3 +310,11 @@ public static void PlayWithListV2 ()
     }
 }
 ```
+
+ML: markdown.md
+YML: -> CI/CD
+YAML:
+XML
+
+F7: đến code
+Shift + F7: ra màn hình design

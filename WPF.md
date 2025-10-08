@@ -18,3 +18,15 @@ bên lập trình FE, Javascript, có nghe DOM - Document Object Model
 - mỗi object khi tải về trình duyệt đc xem là object bự trong ram
 - object bụ html chứa bên trong object nhỏ hơn: Head, Body
 - body chứa object nhỏ hơn, div, h1, input, br, ...
+
+## Các syntax, method đặc biệt khi làm GUI
+
+```javascript
+-MessageBox.Show("Nhận vào question", "Label", "Nút chọn", "Ảnh Box");
+VD: MessageBox.Show(
+  "Are you quit?",
+  "Confirm",
+  MessageBoxButton.YesNo,
+  MessageBoxImage.Question
+);
+```
