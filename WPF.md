@@ -30,3 +30,44 @@ VD: MessageBox.Show(
   MessageBoxImage.Question
 );
 ```
+
+- Cách css trong WPF
+  - App.xaml.cs là nơi để ta khai báo các css để apply cho hoàn loạt các TextBox, Button, ... và các thành phần dùng style nó sẽ tự động cập theo
+  - CSS: Casscade Style Sheet: đổ domino hàng loạt
+- Customize css trong app bằng cách thêm key, dùng `staticResourse Key` để sử dụng trong thẻ Button.
+
+```javascript
+<Button
+  Content="Button"
+  HorizontalAlignment="Left"
+  Margin="163,52,0,0"
+  VerticalAlignment="Top"
+  Style="{StaticResource BlueButton}" // khi chúng ta mún tự customize Button
+  Width="100"
+  Height="55"
+/>
+```
+
+```javascript
+<DataGrid x:Name="StudentListDataGrid" Margin="107,198,107,164"
+          SelectionChanged="StudentListDataGrid_SelectionChanged" AutoGenerateColumns="False">
+
+    <DataGrid.Columns>
+        <DataGridTextColumn Header="Mã SV" Width="70" Binding="{Binding Id}"  />
+        <DataGridTextColumn Header="Tên SV" Width="120" Binding="{Binding Name}"  />
+        <DataGridTextColumn Header="Năm Sinh" Width="70" Binding="{Binding Yob}"  />
+        <DataGridTextColumn Header="Điểm TB" Width="70" Binding="{Binding Gpa}"  />
+    </DataGrid.Columns>
+
+</DataGrid>
+
+
+- sử dụng thẻ <DataGridTextColumn Header ="name" Binding="{Binding Id}">
+
+** Cách tạo ra các cột theo mong muốn:
+- B1: Trong thẻ cha của <DataGrid></DataGrid> phải có thuộc tính `AutoGenerateColumns="False": để có thể customize column`, thêm thẻ <DataGrid.Columns></DataGrid.Columns>
+- `AutoGenerateColumns=true`: tự lo tên cột cho DataGrid thay vì chỉ tự generate ra tên cột
+- B2: có bao nhiu cột thì thêm bấy nhiu thẻ <DataGridTextColumn /> và gồm các thuộc tính như `Header: tên cột` và `Binding: field of column`
+```
+
+- thêm chức năng `delete student` bằng cách chọn vào student mún xóa sau đó hiển thị MessaageBox
