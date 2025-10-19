@@ -71,3 +71,15 @@ VD: MessageBox.Show(
 ```
 
 - thêm chức năng `delete student` bằng cách chọn vào student mún xóa sau đó hiển thị MessaageBox
+
+- xử lý nút bấm delete, update
+- tách code cho chuẩn cấu trúc 3 layer
+- làm quen với database first
+
+keep loving by sharing
+
+sóng gió đời trai không bằng tương lai nhờ nhà ngoại
+
+đổi chyên ngành và show chọn chyên ngành
+
+ComboBox: dùng để select
