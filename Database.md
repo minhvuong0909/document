@@ -203,6 +203,9 @@ cấm quên quan trọng
 - copy hàm đọc json từ file ghi chú, bỏ vào DbContext
 - sửa hàm ON_Configuring để đọc file json
 
+> > > > nhớ chọn file appsettings.json, F4 nếu cửa sổ properties chưa xuất hiện tích chọn option: copy to output directory -> always !!!
+> > > > để đám bảo khi run app, build app, file json này về cùng 1 chỗ với file .dll, .exe, chúng nó thấy nhau, ở cùng 1 chỗ, chúng nó đọc đc info của nhau, .dal đọc đc file cấu hình !!! người xài app, thì vào thư mục dll exe, tìm .json mà sửa user/pass củ sqlserver cho phù hợp với họ
+
 **Table đứng 1 mình**
 
 ```java
@@ -217,8 +220,149 @@ VD:
   - Role quyết định khi login thành công thì d9c CRUD thế nào?
 ```
 
+6. Tham chiếu project, đi từ dưới đi lên, sẽ thấy hiện tượng bắc cầu phụ thuộc
+
+   > > > Chuẩn: GUI ----> Cần BLL ---> DAL ----> DBContext ----> Table trong CSDL
+   > > > mún thấy bắt cầu mà không cần đóng đi mở lại solution, ta làm tham chiếu từ phải trở lại trái
+   > > > BLL --------> Cần DAL trước BLL --------> DAL
+   > > > cửa sổ F$4 tích vào, copy to local: Yes trong DAL của BLL mình đã add vào
+   > > > tích chọn này sẽ giúp: cac .dll, và .exe của 3 project tụ họp chung 1 chỗ, để trở thành full app
+   > > > Chúng nó cần code của nhau, chúng nó phải chung 1 chỗ và appsettings.json cũng chung chỗ lun
+
+   > > > Ngoài thực tế: thư mục đã cài game, C:\PROGRAM FILES\Tên hãng game\GAME
+   > > >
+   > > > > > ... đống file .dll và .exe ở chung với nhau thấy nhau thì mới giúp nhau đc cung cấp code, class cho nhau cùng
+   > > > > > GUI --------> Cần BLL sau GUI ----->
+
+7. code các hàm cho DAL - DATA ACCESS LAYER
+
+- tầng chịu trách nhiệm chơi trực tiếp table qua DbContext class
+- DbConText class chứa bên trong 3 List<ứng với 3 table, nay là 3 class đang nằm trong Models, hoặc Entities>
+  3 cái bag
+  List<AirConditioner> AirConditioners {get; set;} -> \_bag
+  List<SuplierCompany> AirConditioners {get; set;} -> \_bag
+  List<StaffMember> AirConditioners {get; set;} -> \_bag
+
+  DbContext ctx = new();
+  ctx.AirConditioner. -> get all -> vì có cái túi, for cái túi là lấy all
+  -> đưa nguyên túi vào data grid
+  ctx.AirConditioner.Add(?)
+  .Update(?)
+
+  ctx.SaveChange(); // cập nhật xuống table thật
+
+> > > > > NGUYÊN TẮC VIẾT DAL:
+
+- có bao nhiu table thì có bấy nhiu class tương ứng để lo việc CRUD table đó
+- bài thi PE có 3 table: 3 class tương ứng lo CRUD - Repository Class
+  AirConditioner AirConditionerRepo
+  SupplierCompany SupplierCompanyRepo
+  StaffMember StaffMemeberRepo
+  -> nhét Repo vào package/namespace: Repositories
+  -> mỗi class repo ta chế các hàm CRUD tương ứng theo nhu cầu!!! dĩ nhiên phải xài DbContext như ở trên !!!
+  -> nhớ sửa lại class thành public
+
+- dto: data transfer object: khi nào mún hiển thị field cần thiết để hiển thị lên UI thì mới dùng dto
+
+8. Code các hàm cho BLL - Business Logic Layer -> truyền xử lí data trong RAM
+   // GUI - service - repo - dbcontext - table
+
+- tầng chịu trách nhiệm xử lí data trong RAM, có thể gọi thêm 3rd party: Momo, GHN
+  tính toán voucher, point
+- nó sẽ gọi, nhờ repo lấy data trogn table để có căn cứ và data xử lí
+- chắc chắn trong BLL sẽ phải khai báo biến repo !!!!
+
+---
+
+**REPOSITORY\*: Chắc chắn phải khai báo DbContext**
+BLL: Service: chắc chắn khai báo repo ở trên
+chắc chắn phải gọi API của 3RD: MOMO, GHN,...
+
+Tui cần bạn, trong code phải khai báo biến
+
+> > > > > NGUYÊN TẮC VIẾT DAL:
+
+- có bao nhiu table thì có bấy nhiu class tương ứng để lo việc CRUD table đó nhưng nhờ qua tay repo, bll ko nhúng tay trực tiếp xuống DbContext nhưng nhờ qua tay repo, BLL ko nhúng tay trực tiếp xuống DbContext
+- bài thi PE có 3 table: 3 class tương ứng lo CRUD - Repository Class
+  AirConditioner AirConditionerRepo
+  SupplierCompany SupplierCompanyRepo
+  StaffMember StaffMemeberRepo
+  -> nhét Repo vào package/namespace: Repositories
+  -> mỗi class repo ta chế các hàm CRUD tương ứng theo nhu cầu!!! dĩ nhiên phải xài DbContext như ở trên !!!
+  -> nhớ sửa lại class thành public
+- bài thi PE có 3 table: 3 class tương ứng lo CRUD - Repository Class
+  Entities | DAL.Repositories | BLL.Services
+  AirConditioner | AirConditionerRepo | AirConditionerSupplierService
+  SupplierCompany | SupplierCompanyRepo | SupplierCompanyService
+  StaffMember | StaffMemeberRepo | StaffMemeberService
+
+---
+
+9. Code các hàm cho GUI - sử dụng service để cung cấp data cho GUI, GUI cũng gọi service
+   // GUI - service - repo - dbcontext - table
+
+- GUI cần Service để lo vụ data !!!
+  tính toán voucher, point
+- nó sẽ gọi, nhờ repo service data trogn table để có căn cứ và data xử lí, service lại đi nhờ repo, repo đi nhờ DbContext
+- chắc chắn trong GUI sẽ phải khai báo biến service !!!!
+
+---
+
+**REPOSITORY\*: Chắc chắn phải khai báo DbContext**
+BLL: Service: chắc chắn khai báo repo ở trên
+chắc chắn phải gọi API của 3RD: MOMO, GHN,...
+
+Tui cần bạn, trong code phải khai báo biến
+
+> > > > > NGUYÊN TẮC VIẾT GUI:
+> > > > > -- khai báo các service cần thiết tùy theo màn hình !!!!!!!!
+> > > > > -- màn hình nào cần những service gì, thì gọi service đó
+
+=================
+
+```
+DAL: REPOSITORY: CHẮC CHẮN PHẢI KHAI BÁO DBCONTEXT
+
+BLL: SERVICE: CHẮC CHẮN PHẢI KHAI BÁO REPO Ở TRÊN
+              CHẮC CHẮN PHẢI GỌI API CỦA 3RD PARTY: MOMO, GHN,....
+
+GUI: CHẮC CHẮN PHẢI KHAI BÁO SERVICE, NHÌU SERVICE ĐỂ PHỤC VỤ CÁC NÚT BẤM, COMBO BOX!!!
+```
+
+- có bao nhiu table thì có bấy nhiu class tương ứng để lo việc CRUD table đó nhưng nhờ qua tay repo, bll ko nhúng tay trực tiếp xuống DbContext nhưng nhờ qua tay repo, BLL ko nhúng tay trực tiếp xuống DbContext
+- bài thi PE có 3 table: 3 class tương ứng lo CRUD - Repository Class
+  AirConditioner AirConditionerRepo
+  SupplierCompany SupplierCompanyRepo
+  StaffMember StaffMemeberRepo
+  -> nhét Repo vào package/namespace: Repositories
+  -> mỗi class repo ta chế các hàm CRUD tương ứng theo nhu cầu!!! dĩ nhiên phải xài DbContext như ở trên !!!
+  -> nhớ sửa lại class thành public
+- bài thi PE có 3 table: 3 class tương ứng lo CRUD - Repository Class
+  Entities | DAL.Repositories | BLL.Services
+  AirConditioner | AirConditionerRepo | AirConditionerSupplierService
+  SupplierCompany | SupplierCompanyRepo | SupplierCompanyService
+  StaffMember | StaffMemeberRepo | StaffMemeberService
+
+10. nộp bài trên server chỉ chấp nhận file src <= 10MB
+
+- thư mục code của chúng ta thường >= 20MB do nó chứa thêm bộ thư viện EF Core khi ta add dependency, và khi ta build, run cần có EF CORE mới chạy đc !!!!
+
+- Ta cần "chiêu" để remove thư viện, mà ko gây hỏng source code
+  Menu BUILD -> clean solution trước khi nộp bài để remove thư viện = VS cấm ra ngoài thư mục project xóa = tay !!!
+
+kích thước thư mục giảm xuống < 7MB
+--> **Nén Project thành file .rar .zip nộp bài**
+
+> > > > trước khi nén project thì phải tắt proeject đi để nó ra cho mình
+
+---
+
+IoC Container
+
 - về nhà: tạo sẵn 3 màn hình
 - LoginWindow có sẵn ô nhập Email, Pass, 2 nút Login, Quit
 - MainWindow có sẵn: grid, dàn nút Create, Update, Delete, Quit
 - Detail Window có sẵn: dàn 7 ô nhập và 1 comboBox ứng với table AirConditioner
   đặt tên sẵn lun
+
+  ID là key tự tăng
