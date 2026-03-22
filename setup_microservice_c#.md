@@ -40,7 +40,7 @@ VD: request và response model
 ```
 
 ```
-dotnet new classlib -n Contracts :
+dotnet new classlib -n Contracts
 `dùng để định nghĩa dữ liệu và quy ước chung cho các project giao tiếp nhau`
 ```
 
@@ -53,7 +53,7 @@ VD: ApiResponse<>
 
 ```
 dotnet new classlib -n Extensions
-``dùng để cấu hình và tái sử dụng gọn hơn và nhanh hơn
+``chứa extension methods để cấu hình DI, middleware, configuration
 VD: IConfiguration
     WebApplication
 ``
@@ -157,3 +157,40 @@ appsettings.json
 }
 ```
 
+`Lưu ý:` port nội bộ 5000 phải đồng bộ với docker file
+
+### 6. Cấu trúc của 1 Service
+
+`có thể dùng clean architecture trong này`
+ServiceAPI
+│
+├── Controllers
+├── Services
+├── Repositories
+├── Entities
+└── DTO
+
+### 7. Setup MessageBus (Kafka | RabbitMQ)
+
+==> Dùng để xử lý giao tiếp bất đồng bộ giữa các service qua RabbitMQ/Kafka.
+
+MessageBus.cs
+
+```dotnet
+public interface IMessageBus
+{
+    Task Publish<T>(T message);
+    Task Subscribe<T>();
+}
+```
+
+### 8. setup docker
+
+```
+docker-compose.yml : chạy toàn bộ của hệ thống
+
+lệnh chạy hệ thống
+docker-compose up --build
+```
+
+- phải tạo Dockerfile cho mỗi services
